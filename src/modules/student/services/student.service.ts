@@ -2,6 +2,7 @@ import { AppError } from "../../../common/errors/AppError.js";
 import { StudentRepository } from "../repositories/student.repository.js";
 import { CreateStudentInput, ListStudentQuery, updateStudentInput } from "../student.dto.js";
 import { Student } from '@prisma/client';
+import { StudentWithEnrollmentsModel } from '../student.model.js';
 
 export class StudentService {
     constructor(private readonly studentRepository: StudentRepository) { }
@@ -75,7 +76,7 @@ export class StudentService {
         })
     }
 
-    async getStudentById(id: number): Promise<Student> {
+    async getStudentById(id: number): Promise<StudentWithEnrollmentsModel> {
         const student = await this.studentRepository.findById(id);
 
         if (!student) {
@@ -86,7 +87,7 @@ export class StudentService {
     }
 
     async listStudents(query: ListStudentQuery): Promise<{
-        students: Student[],
+        students: StudentWithEnrollmentsModel[],
         pagination: {
             page: number,
             limit: number,
@@ -172,7 +173,7 @@ export class StudentService {
             nInput
         );
     }
-    
+
     async deleteStudent(id: number): Promise<void> {
         await this.getStudentById(id);
         await this.studentRepository.delete(id);

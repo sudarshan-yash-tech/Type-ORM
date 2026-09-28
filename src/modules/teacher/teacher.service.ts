@@ -1,7 +1,7 @@
-import type { Teacher } from "@prisma/client";
 import { TeacherRepository } from "./teacher.repository.js";
 import { CreateTeacherInput, ListTeachersQuery, UpdateTeacherInput } from "./teacher.dto.js";
 import { AppError } from "../../common/errors/AppError.js";
+import { TeacherModel } from "./teacher.model.js";
 
 export class TeacherService {
     constructor(
@@ -11,7 +11,7 @@ export class TeacherService {
 
     async createTeacher(
         input: CreateTeacherInput,
-    ): Promise<Teacher> {
+    ): Promise<TeacherModel> {
         const email = this.normalizeEmail(
             input.email,
         );
@@ -36,7 +36,7 @@ export class TeacherService {
 
     async getTeacherById(
         id: number,
-    ): Promise<Teacher> {
+    ): Promise<TeacherModel> {
         const teacher =
             await this.teacherRepository.findById(id);
 
@@ -54,7 +54,7 @@ export class TeacherService {
     async listTeachers(
         query: ListTeachersQuery,
     ): Promise<{
-        teachers: Teacher[];
+        teachers: TeacherModel[];
         pagination: {
             page: number;
             limit: number;
@@ -108,7 +108,7 @@ export class TeacherService {
     async updateTeacher(
         id: number,
         input: UpdateTeacherInput,
-    ): Promise<Teacher> {
+    ): Promise<TeacherModel> {
         await this.getTeacherById(id);
 
         const updateData: UpdateTeacherInput = {};

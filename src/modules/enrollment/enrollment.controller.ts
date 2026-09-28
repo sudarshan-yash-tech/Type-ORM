@@ -129,6 +129,7 @@ export class EnrollmentController {
             "enrollmentId",
         );
 
+
         await this.enrollmentService
             .deleteEnrollment(id);
 

@@ -10,7 +10,7 @@ export class PrismaCourseRepository implements CourseRepository {
             data: {
                 code: input.code,
                 title: input.title,
-                description: input.descriptio
+                description: input.description
             }
         })
     }

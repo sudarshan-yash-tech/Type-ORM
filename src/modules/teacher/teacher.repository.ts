@@ -1,35 +1,34 @@
-import type { Teacher } from "@prisma/client";
 import {
     CreateTeacherInput,
     ListTeachersQuery,
     UpdateTeacherInput,
 } from "./teacher.dto.js";
-
+import { TeacherModel } from "./teacher.model.js";
 
 export interface TeacherRepository {
     create(
         input: CreateTeacherInput,
-    ): Promise<Teacher>;
+    ): Promise<TeacherModel>;
 
     findById(
         id: number,
-    ): Promise<Teacher | null>;
+    ): Promise<TeacherModel | null>;
 
     findByEmail(
         email: string,
-    ): Promise<Teacher | null>;
+    ): Promise<TeacherModel | null>;
 
     findMany(
         query: ListTeachersQuery,
     ): Promise<{
-        teachers: Teacher[];
+        teachers: TeacherModel[];
         total: number;
     }>;
 
     update(
         id: number,
         input: UpdateTeacherInput,
-    ): Promise<Teacher>;
+    ): Promise<TeacherModel>;
 
     hasAssignments(
         id: number,

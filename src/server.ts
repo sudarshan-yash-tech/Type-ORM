@@ -1,26 +1,56 @@
-import { env } from "./config/env.js";
-import { connectDatabase, disconnectDatabase } from "./config/prisma.js";
-import { app } from "./app.js";
+import "reflect-metadata";
+import { createApp } from "./app.js";
+import { appDataSource } from "./database/data-source.js";
 
-const startServer = async () => {
-    await connectDatabase();
-    const server = app.listen(env.PORT, () => {
-        console.log(`API listening on port ${env.PORT}`);
-    });
+const port = Number(
+    process.env.PORT ?? 3000,
+);
 
-    const shutdown = async () => {
-        server.close(async () => {
-            await disconnectDatabase();
-            process.exit(0);
+async function bootstrap(): Promise<void> {
+    try {
+        await appDataSource.initialize();
+
+        console.log(
+            "Database connection initialized",
+        );
+
+        const app = createApp();
+
+        app.listen(port, () => {
+            console.log(
+                `API running on port ${port}`,
+            );
         });
-    };
+    } catch (error) {
+        console.error(
+            "Application startup failed",
+            error,
+        );
 
-    process.once("SIGINT", shutdown);
-    process.once("SIGTERM", shutdown);
-};
+        process.exit(1);
+    }
+}
 
-startServer().catch(async (error) => {
-    console.error("Failed to start API", error);
-    await disconnectDatabase();
-    process.exit(1);
+void bootstrap();
+
+async function shutdown(
+    signal: string,
+): Promise<void> {
+    console.log(
+        `${signal} received. Shutting down.`,
+    );
+
+    if (appDataSource.isInitialized) {
+        await appDataSource.destroy();
+    }
+
+    process.exit(0);
+}
+
+process.on("SIGINT", () => {
+    void shutdown("SIGINT");
+});
+
+process.on("SIGTERM", () => {
+    void shutdown("SIGTERM");
 });

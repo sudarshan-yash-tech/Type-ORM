@@ -2,6 +2,7 @@ import { Prisma, Student } from "@prisma/client";
 import { prisma } from "../../../config/prisma.js";
 import { CreateStudentInput, ListStudentQuery, updateStudentInput } from "../student.dto.js";
 import { StudentRepository } from "./student.repository.js";
+import { StudentWithEnrollmentsModel } from "../student.model.js";
 
 export class PrismaStudentRepository implements StudentRepository {
 
@@ -15,7 +16,7 @@ export class PrismaStudentRepository implements StudentRepository {
         })
     }
 
-    async findById(id: number): Promise<Student | null> {
+    async findById(id: number): Promise<StudentWithEnrollmentsModel | null> {
         return prisma.student.findUnique({
             where: {
                 id: id
@@ -32,7 +33,7 @@ export class PrismaStudentRepository implements StudentRepository {
     }
 
     async findMany(query: ListStudentQuery): Promise<{
-        students: Student[],
+        students: StudentWithEnrollmentsModel[],
         total: number
     }> {
         const page = query.page ?? 1;

@@ -1,4 +1,4 @@
-import { EnrollmentStatus } from "@prisma/client";
+import { EnrollmentStatus } from "./enrollment.status.enum.js";
 
 export interface CreateEnrollmentInput {
     studentId: number;

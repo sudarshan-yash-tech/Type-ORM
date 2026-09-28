@@ -1,12 +1,35 @@
-import { CourseController } from './course.controller.js';
-import { createCourseRouter } from './course.routes.js';
-import { CourseService } from './course.service.js';
-import { PrismaCourseRepository } from './prisma-course-repository.js';
+import type { Router } from "express";
+import { appDataSource } from "../../database/data-source.js";
+import { CourseEntity } from "../../database/entities/course.entity.js";
+import { TypeOrmCourseRepository } from "./typeorm-course.repository.js";
+import { CourseService } from "./course.service.js";
+import { CourseController } from "./course.controller.js";
+import { createCourseRouter } from "./course.routes.js";
 
-const courseRepository = new PrismaCourseRepository()
+export function createCourseModule(): Router {
+    const typeOrmRepository =
+        appDataSource.getRepository(
+            CourseEntity,
+        );
 
-const courseSrvice = new CourseService(courseRepository);
+    const courseRepository =
+        new TypeOrmCourseRepository(
+            typeOrmRepository,
+        );
 
-const courseController = new CourseController(courseSrvice);
+    const courseService =
+        new CourseService(
+            courseRepository,
+        );
 
-export const courseRouter = createCourseRouter(courseController)
+    const courseController =
+        new CourseController(
+            courseService,
+        );
+
+    return createCourseRouter(
+        courseController,
+    );
+}
+
+export const courseRoter = createCourseModule();

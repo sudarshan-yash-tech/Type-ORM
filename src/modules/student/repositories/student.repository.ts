@@ -1,20 +1,20 @@
-import { Student } from '@prisma/client';
 import { CreateStudentInput, ListStudentQuery, updateStudentInput } from '../student.dto.js';
+import { StudentModel, StudentWithEnrollmentsModel } from '../student.model.js';
 
 export interface StudentRepository {
 
-    create(input: CreateStudentInput): Promise<Student>;
+    create(input: CreateStudentInput): Promise<StudentModel>;
 
-    findById(id: number): Promise<Student | null>;
+    findById(id: number): Promise<StudentWithEnrollmentsModel | null>;
 
-    findByEmail(email: string): Promise<Student | null>;
+    findByEmail(email: string): Promise<StudentModel | null>;
 
     findMany(query: ListStudentQuery): Promise<{
-        students: Student[],
+        students: StudentWithEnrollmentsModel[],
         total: number
     }>
 
-    update(id: number, input: updateStudentInput): Promise<Student>;
+    update(id: number, input: updateStudentInput): Promise<StudentModel>;
 
     delete(id: number): Promise<void>
 }

@@ -31,6 +31,6 @@ export function createStudentRouter(
         "/:id",
         asyncHandler(controller.delete),
     );
-
+    
     return router;
 }

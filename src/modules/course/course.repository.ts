@@ -1,20 +1,19 @@
-import { Course } from "@prisma/client";
 import { CreateCourseInput, ListCourseQuery, UpdateCourseInput } from "./course.dto.js";
-import { updateStudentInput } from "../student/student.dto.js";
+import { CourseModel } from "./course.model.js";
 
 export interface CourseRepository {
 
-    create(input: CreateCourseInput): Promise<Course>;
+    create(input: CreateCourseInput): Promise<CourseModel>;
 
-    findById(id: number): Promise<Course | null>;
+    findById(id: number): Promise<CourseModel | null>;
 
-    findByCode(code: string): Promise<Course | null>;
+    findByCode(code: string): Promise<CourseModel | null>;
 
-    findByTitle(title: string): Promise<Course| null>;
+    findByTitle(title: string): Promise<CourseModel | null>;
 
-    findMany(query: ListCourseQuery): Promise<{ courses: Course[], count: number }>;
+    findMany(query: ListCourseQuery): Promise<{ courses: CourseModel[], count: number }>;
 
-    update(id: number, input: UpdateCourseInput): Promise<Course>
+    update(id: number, input: UpdateCourseInput): Promise<CourseModel>
 
     hasRelatedRecord(id: number): Promise<boolean>;
 

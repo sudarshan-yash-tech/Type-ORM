@@ -1,27 +1,24 @@
-import { Course, Enrollment, EnrollmentStatus, Student } from "@prisma/client";
+import { EnrollmentModel, EnrollmentWithRelationsModel } from "./enrollement.model.js";
 import { CreateEnrollmentInput, ListEnrollmentsQuery } from "./enrollment.dto.js";
+import { EnrollmentStatus } from "./enrollment.status.enum.js";
 
-export type EnrollmentWithRelations = Enrollment & {
-    student: Student,
-    course: Course
-}
 
 export interface EnrollmentRepository {
+    
+    create(input: CreateEnrollmentInput): Promise<EnrollmentWithRelationsModel>;
 
-    create(input: CreateEnrollmentInput): Promise<EnrollmentWithRelations>;
+    findById(id: number): Promise<EnrollmentWithRelationsModel | null>;
 
-    findById(id: number): Promise<EnrollmentWithRelations | null>;
-
-    findByStudentAndCourse(studentId: number, courseId: number): Promise<Enrollment | null>;
+    findByStudentAndCourse(studentId: number, courseId: number): Promise<EnrollmentModel | null>;
 
     findMany(query: ListEnrollmentsQuery): Promise<{
-        enrollments: EnrollmentWithRelations[],
+        enrollments: EnrollmentWithRelationsModel[],
         total: number
     }>
 
     updateStatus(id: number,
         status: EnrollmentStatus
-    ): Promise<EnrollmentWithRelations>
+    ): Promise<EnrollmentWithRelationsModel>
 
     delete(id: number): Promise<void>;
 
@@ -30,7 +27,7 @@ export interface EnrollmentRepository {
         limit: number,
         status?: EnrollmentStatus
     }): Promise<{
-        enrollments: EnrollmentWithRelations[],
+        enrollments: EnrollmentWithRelationsModel[],
         total: number
     }>
 }

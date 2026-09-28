@@ -1,16 +1,34 @@
-import { PrismaTeacherRepository } from "./prisma-teacher.repository.js";
+import type { Router } from "express";
+import { appDataSource } from "../../database/data-source.js";
+import { TeacherEntity } from "../../database/entities/teacher.entity.js";
+import { TypeOrmTeacherRepository } from "./typeorm-teacher.repository.js";
+import { TeacherService } from "./teacher.service.js";
 import { TeacherController } from "./teacher.controller.js";
 import { createTeacherRouter } from "./teacher.routes.js";
-import { TeacherService } from "./teacher.service.js";
 
-const teacherRepository =
-    new PrismaTeacherRepository();
 
-const teacherService =
-    new TeacherService(teacherRepository);
+export function createTeacherModule(): Router {
+    const typeOrmRepository =
+        appDataSource.getRepository(
+            TeacherEntity,
+        );
 
-const teacherController =
-    new TeacherController(teacherService);
+    const teacherRepository =
+        new TypeOrmTeacherRepository(
+            typeOrmRepository,
+        );
 
-export const teacherRouter =
-    createTeacherRouter(teacherController);
+    const teacherService =
+        new TeacherService(
+            teacherRepository,
+        );
+
+    const teacherController =
+        new TeacherController(
+            teacherService,
+        );
+
+    return createTeacherRouter(
+        teacherController,
+    );
+}

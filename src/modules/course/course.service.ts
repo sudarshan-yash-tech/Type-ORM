@@ -1,7 +1,7 @@
-import { Course } from "@prisma/client";
 import { CourseRepository } from "./course.repository.js";
 import { CreateCourseInput, ListCourseQuery, UpdateCourseInput } from "./course.dto.js";
 import { AppError } from "../../common/errors/AppError.js";
+import { CourseModel } from "./course.model.js";
 
 export class CourseService {
 
@@ -89,7 +89,7 @@ export class CourseService {
         }
     }
 
-    async createCourse(input: CreateCourseInput): Promise<Course> {
+    async createCourse(input: CreateCourseInput): Promise<CourseModel> {
         const code = this.normalizeCode(input.code);
         const title = this.normalizeTitle(input.title);
         const description =
@@ -109,7 +109,7 @@ export class CourseService {
     }
 
     async listCourses(query: ListCourseQuery): Promise<{
-        courses: Course[], pagination: {
+        courses: CourseModel[], pagination: {
             page: number;
             limit: number;
             total: number;
@@ -152,7 +152,7 @@ export class CourseService {
 
     async getCourseById(
         id: number,
-    ): Promise<Course> {
+    ): Promise<CourseModel> {
         const course =
             await this.courseRepository.findById(id);
 
@@ -170,7 +170,7 @@ export class CourseService {
     async updateCourse(
         id: number,
         input: UpdateCourseInput
-    ): Promise<Course> {
+    ): Promise<CourseModel> {
         await this.getCourseById(id);
 
         const updateData: UpdateCourseInput = {};

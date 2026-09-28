@@ -1,9 +1,10 @@
 import { AppError } from "../../common/errors/AppError.js";
 import { CourseRepository } from "../course/course.repository.js";
 import { StudentRepository } from "../student/repositories/student.repository.js";
+import { EnrollmentWithRelationsModel } from "./enrollement.model.js";
 import { CreateEnrollmentInput, ListEnrollmentsQuery, UpdateEnrollementStatusInput } from "./enrollment.dto.js";
-import { EnrollmentStatus } from "@prisma/client";
-import { EnrollmentRepository, EnrollmentWithRelations } from "./enrollment.repository.js";
+import { EnrollmentRepository, } from "./enrollment.repository.js";
+import { EnrollmentStatus } from "./enrollment.status.enum.js";
 
 export class EnrollmentService {
     constructor(
@@ -19,7 +20,7 @@ export class EnrollmentService {
 
     async enrollStudent(
         input: CreateEnrollmentInput,
-    ): Promise<EnrollmentWithRelations> {
+    ): Promise<EnrollmentWithRelationsModel> {
         this.validatePositiveId(
             input.studentId,
             "studentId",
@@ -79,7 +80,7 @@ export class EnrollmentService {
 
     async getEnrollmentById(
         id: number,
-    ): Promise<EnrollmentWithRelations> {
+    ): Promise<EnrollmentWithRelationsModel> {
         const enrollment =
             await this.enrollmentRepository.findById(
                 id,
@@ -99,7 +100,7 @@ export class EnrollmentService {
     async listEnrollments(
         query: ListEnrollmentsQuery,
     ): Promise<{
-        enrollments: EnrollmentWithRelations[];
+        enrollments: EnrollmentWithRelationsModel[];
         pagination: {
             page: number;
             limit: number;
@@ -167,7 +168,7 @@ export class EnrollmentService {
     async updateEnrollmentStatus(
         id: number,
         input: UpdateEnrollementStatusInput,
-    ): Promise<EnrollmentWithRelations> {
+    ): Promise<EnrollmentWithRelationsModel> {
         const enrollment =
             await this.getEnrollmentById(id);
 
@@ -282,7 +283,7 @@ export class EnrollmentService {
             status?: EnrollmentStatus;
         },
     ): Promise<{
-        enrollemtns: EnrollmentWithRelations[],
+        enrollemtns: EnrollmentWithRelationsModel[],
         pagination: {
             page: number;
             limit: number;
