@@ -13,5 +13,5 @@ model Mark {
     @@unique([studentId, examId])
     
     @@index([studentId])
-    @@index([examId])
+    // @@index([examId])
 }
